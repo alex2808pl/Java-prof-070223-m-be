@@ -1,0 +1,41 @@
+Классы:
+
+ReportEntity
+------------
+Поля:
+	private Long reportId;
+	private Date startDate;
+	private Date endDate;
+	private byte[] content;
+
+Бизнес-логика:
+Класс POJO описывает сущность отчета с уникальным идентификатором,
+даты диапазона за период которого нужно сформировать отчет и поле, в которое ложиться сформированный отчет.
+
+интерфейс IReportGenerator
+--------------------------
+	методы:
+	void generateReport(ReportEntity report);
+
+Бизнес-логика:
+Интерфейс для работы с генератором отчета.
+Реализация класса на основании данного интерфейса может генерировать отчетв в различном формате.
+
+
+ReportGeneratorService
+----------------------
+Поля:
+IReportGenerator reportGenerator;
+
+Методы:
+void generateReport(Date startDate, Date endDate, byte[] content)
+
+Бизнес-логика:
+Класс-сервис для запуска генерации отчета.
+
+
+
+Книга дла самостоятельной проработке по ТDD:
+--------------------------------------------
+Бек Кент : Экстремальное программирование: разработка через тестирование
+https://www.ozon.ru/product/ekstremalnoe-programmirovanie-razrabotka-cherez-testirovanie-bek-kent-211432674/?oos_search=false&sh=v8-7_JToFA&reviewsVariantMode=2
