@@ -2,19 +2,31 @@ package de.telran._2023_08_15.hometask;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class ClientTest {
 
-    Client clientTest = new Client();
+    @InjectMocks
+    Client clientTest;
 
-    @BeforeEach
-    void setUp() {
-    }
+    @Mock
+    List<Account> accountsMock;
+
+    @Captor
+    ArgumentCaptor<Account> argCaptor;
 
     @Test
     void idNotEmptyTest() {
@@ -56,6 +68,35 @@ class ClientTest {
     void isSurnameNullTest() {
         String stringNull = null;
         assertThrows(IllegalArgumentException.class, () -> clientTest.setSurname(stringNull));
+    }
+
+    @Test
+    void createNewAccountSuccessTest() {
+        Account expactedNewAccount = new Account(true, Account.Zone.ZONE_1, 0.0);
+        LocalDate dateCurrentTest = LocalDate.of(2023, 01, 01);
+        clientTest.createNewAccount(expactedNewAccount, dateCurrentTest);
+        verify(accountsMock).add(expactedNewAccount);
+    }
+
+    @Test
+    void createNewAccountForOldManTest() {
+        Account expactedNewAccount = new Account(true, Account.Zone.ZONE_1, 0.0);
+        LocalDate dateCurrentTest = LocalDate.of(2023, 01, 01);
+        clientTest.setDateBirth(LocalDate.of(1900, 01, 01));
+        assertThrows(IllegalArgumentException.class, () -> clientTest.createNewAccount(expactedNewAccount, dateCurrentTest));
+    }
+
+    @Test
+    void createNewAccountSuccessOldManTest() {
+        Account expactedNewAccount = new Account(true, Account.Zone.ZONE_1, 1.0);
+        LocalDate dateCurrentTest = LocalDate.of(2023, 01, 01);
+        clientTest.setDateBirth(LocalDate.of(1900, 01, 01));
+        clientTest.createNewAccount(expactedNewAccount, dateCurrentTest);
+
+        verify(accountsMock).add(argCaptor.capture());
+        Account actualAccount = argCaptor.getValue();
+        assertTrue(clientTest.getDateBirth().isBefore(dateCurrentTest.minusYears(100))
+                && actualAccount.getBalance()>0);
     }
 
 }
