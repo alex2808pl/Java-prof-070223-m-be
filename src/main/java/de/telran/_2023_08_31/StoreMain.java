@@ -1,6 +1,6 @@
 package de.telran._2023_08_31;
 
-public class Main {
+public class StoreMain {
     public static void main(String[] args) {
         Store store=new Store();
         Producer producer = new Producer(store);

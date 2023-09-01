@@ -1,6 +1,6 @@
 package de.telran._2023_08_31.practice.messages;
 
-public class Main {
+public class MessageMain {
 
     public static void main(String[] args) {
         Message msg = new Message("обработать");
